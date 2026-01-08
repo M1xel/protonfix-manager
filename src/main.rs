@@ -89,16 +89,29 @@ impl Render for GameList {
             // Game List Area
             .child(
                 div()
-                    .flex_1() // Occupy remaining vertical space
+                    .flex_1()
                     .size_full()
+                    .flex()
+                    // Sidebar:
                     .child(
-                        // Virtualized list rendering
-                        list(self.list_state.clone(), move |ix, _win, _cx| {
-                            let game = &games[ix];
-                            Self::render_game_item(game).into_any_element()
-                        })
-                        .size_full(),
-                    ),
+                        div()
+                            .w(Pixels::from(300.0))  // 1. Give the wrapper a fixed width
+                            .h_full()                // 2. Make it full height
+                            .child(
+                                // 3. Put your existing list code right here
+                                list(self.list_state.clone(), move |ix, _win, _cx| {
+                                    let game = &games[ix];
+                                    Self::render_game_item(game).into_any_element()
+                                })
+                                    .size_full() // Make the list fill the wrapper
+                            )
+                    )
+                    .child(
+                        div().w_px().bg(rgb(0x333333))
+                    )
+                    .child(
+                        div().flex_1().size_full().bg(rgb(0x1e1e1e)).child("Details go here"),
+                    )
             )
     }
 }
