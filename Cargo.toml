@@ -1,0 +1,11 @@
+[package]
+name = "protonfix-manager"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "*"
+steamlocate = "*"
+
+gpui = { version = "*" }
+gpui-component = "*"
