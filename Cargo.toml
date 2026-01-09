@@ -4,8 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-anyhow = "*"
-steamlocate = "*"
+anyhow = "1.0"
+steamlocate = "2.0"
 
-gpui = { version = "*" }
-gpui-component = "*"
+gpui = { version = "0.2" }
+gpui-component = "0.5"
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+redb = "3.1"

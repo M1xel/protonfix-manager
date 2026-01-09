@@ -1,11 +1,19 @@
+mod db;
+mod state;
 mod steam;
+
+use std::sync::Arc;
 
 use anyhow::Result;
 use gpui::{
     App, Application, Context, FontWeight, ListAlignment, ListState, MouseButton, Pixels, Window,
     WindowOptions, div, list, prelude::*, rgb,
 };
+use redb::Database;
+use serde::{Deserialize, Serialize};
 use steam::{Game, SteamClient};
+
+use crate::{db::AppDb, state::AppStore};
 
 struct GameList {
     games: Vec<Game>,
@@ -94,29 +102,29 @@ impl Render for GameList {
                     .flex()
                     // Sidebar:
                     .child(
+                        div().w(Pixels::from(300.0)).h_full().child(
+                            list(self.list_state.clone(), move |ix, _win, _cx| {
+                                let game = &games[ix];
+                                Self::render_game_item(game).into_any_element()
+                            })
+                            .size_full(),
+                        ),
+                    )
+                    .child(div().w_px().bg(rgb(0x333333)))
+                    .child(
                         div()
-                            .w(Pixels::from(300.0))  // 1. Give the wrapper a fixed width
-                            .h_full()                // 2. Make it full height
-                            .child(
-                                // 3. Put your existing list code right here
-                                list(self.list_state.clone(), move |ix, _win, _cx| {
-                                    let game = &games[ix];
-                                    Self::render_game_item(game).into_any_element()
-                                })
-                                    .size_full() // Make the list fill the wrapper
-                            )
-                    )
-                    .child(
-                        div().w_px().bg(rgb(0x333333))
-                    )
-                    .child(
-                        div().flex_1().size_full().bg(rgb(0x1e1e1e)).child("Details go here"),
-                    )
+                            .flex_1()
+                            .size_full()
+                            .bg(rgb(0x1e1e1e))
+                            .child("Details go here"),
+                    ),
             )
     }
 }
 
 fn main() -> Result<()> {
+    let db = Arc::new(AppDb::new("protonfix.redb")?);
+
     // Initial fetch of games
     let games = SteamClient::get_games().unwrap_or_else(|e| {
         eprintln!("Error fetching games: {}", e);
@@ -124,6 +132,8 @@ fn main() -> Result<()> {
     });
 
     Application::new().run(move |cx: &mut App| {
+        AppStore::init(cx, db.clone());
+
         let games = games.clone();
         cx.open_window(WindowOptions::default(), move |_, cx| {
             cx.new(|_| GameList::new(games))

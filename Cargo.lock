@@ -4242,6 +4242,9 @@ dependencies = [
  "anyhow",
  "gpui",
  "gpui-component",
+ "redb",
+ "serde",
+ "serde_json",
  "steamlocate",
 ]
 
@@ -4528,6 +4531,15 @@ checksum = "6717cf23b488adf64b9d711329542ba34de147df262370221940dfabc2c91358"
 dependencies = [
  "bytemuck",
  "font-types",
+]
+
+[[package]]
+name = "redb"
+version = "3.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae323eb086579a3769daa2c753bb96deb95993c534711e0dbe881b5192906a06"
+dependencies = [
+ "libc",
 ]
 
 [[package]]
