@@ -82,7 +82,9 @@ impl GameList {
 }
 
 impl Render for GameList {
-    fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let state = AppStore::get(cx);
+
         let games = self.games.clone();
 
         div()
@@ -102,7 +104,7 @@ impl Render for GameList {
                     .flex()
                     // Sidebar:
                     .child(
-                        div().w(Pixels::from(300.0)).h_full().child(
+                        div().w(state.sidebar_width).h_full().child(
                             list(self.list_state.clone(), move |ix, _win, _cx| {
                                 let game = &games[ix];
                                 Self::render_game_item(game).into_any_element()

@@ -14,7 +14,7 @@ pub struct WinePrefix {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppState {
     pub prefixes: Vec<WinePrefix>,
-    pub sidebar_width: f32,
+    pub sidebar_width: Pixels,
     pub last_selected: Option<String>,
 }
 
@@ -22,7 +22,7 @@ impl Default for AppState {
     fn default() -> Self {
         Self {
             prefixes: vec![],
-            sidebar_width: 250.0,
+            sidebar_width: Pixels::from(250.0),
             last_selected: None,
         }
     }
