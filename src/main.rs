@@ -52,6 +52,7 @@ impl GameList {
         div()
             .flex()
             .flex_col()
+            .w_full()
             // Padding
             .px_4()
             .py_2()
